@@ -13,7 +13,7 @@ with sr.Microphone() as source:
 # !/usr/bin/env python3
 
 from vosk import Model, KaldiRecognizer
-import os
+# import os
 import pyaudio
 import pyttsx3
 import json
@@ -31,7 +31,8 @@ model = Model('model')
 rec = KaldiRecognizer(model, 16000)
 
 p = pyaudio.PyAudio()
-stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
+stream = p.open(format=pyaudio.paInt16, channels=1,
+                rate=16000, input=True, frames_per_buffer=8000)
 stream.start_stream()
 
 
