@@ -18,6 +18,7 @@ import pyaudio
 import pyttsx3
 import json
 import core
+from nlu.classifier import classify
 #
 engine = pyttsx3.init()
 
@@ -46,9 +47,13 @@ while True:
         if result is not None:
             text = result['text']
 
-            print(text)
             # speak(text)
-            if text == 'que horas são' or text == 'diga as horas':
+            entity = classify(text)
+            if entity == r'time\getTime':
                 speak(core.SystemInfo.get_time())
+            if entity == r'time\getDate':
+                speak(core.SystemInfo.get_date())
+            print(f'Text: {text} Entity: {entity}')
             if text == 'pare':
+                speak('Obrigado Senhor')
                 break

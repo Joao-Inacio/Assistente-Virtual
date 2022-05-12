@@ -6,6 +6,10 @@ commands:
     entity: time
     action: getTime
   - commmand:
+    input:  Que horas é?
+    entity: time
+    action: getTime
+  - commmand:
     input:  Me digas horas.
     entity: time
     action: getTime
@@ -16,6 +20,10 @@ commands:
     action: getDate
   - commmand:
     input:  Data de hoje.
+    entity: time
+    action: getDate
+  - commmand:
+    input:  Que dia é hoje?.
     entity: time
     action: getDate
   # Tempo

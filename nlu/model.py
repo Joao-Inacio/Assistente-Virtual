@@ -51,12 +51,16 @@ for i, input in enumerate(inputs):
 
 labels = set(outputs)
 
+fwrite = open('labels.txt', 'w', encoding='utf8')
+
 label2idx = {}
 idx2label = {}
 
 for k, label in enumerate(labels):
     label2idx[label] = k
     idx2label[k] = label
+    fwrite.write(label + '\n')
+fwrite.close()
 
 output_data = []
 
@@ -73,9 +77,13 @@ model.add(LSTM(128))
 model.add(Dense(len(output_data), activation='softmax'))
 
 model.compile(optimizer='adam', loss='categorical_crossentropy',
-              metrics=['acc'])
+              metrics=['acc']
+              )
 
-model.fit(input_data, output_data, epochs=16)
+model.fit(input_data, output_data, epochs=32)
+
+# Salva modelo
+model.save('model.h5')
 
 
 def classify(text):
