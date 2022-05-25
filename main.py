@@ -13,19 +13,35 @@ with sr.Microphone() as source:
 # !/usr/bin/env python3
 
 from vosk import Model, KaldiRecognizer
-# import os
+import os
 import pyaudio
 import pyttsx3
 import json
 import core
 from nlu.classifier import classify
-#
+# Síntese de fala
 engine = pyttsx3.init()
+
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[-2].id)
 
 
 def speak(text):
     engine.say(text)
     engine.runAndWait()
+
+
+def evaluate(text):
+    entity = classify(text)
+    if entity == 'time|getTime':
+        speak(core.SystemInfo.get_time())
+    if entity == 'time|getDate':
+        speak(core.SystemInfo.get_date())
+    # Abrir programas
+    if entity == 'open|notepads':
+        speak('Abrindo o bloco de notas')
+        os.system('Notepads.exe')
+    print(f'Text: {text} Entity: {entity}')
 
 
 model = Model('model')
@@ -46,14 +62,7 @@ while True:
         result = json.loads(result)
         if result is not None:
             text = result['text']
-
-            # speak(text)
-            entity = classify(text)
-            if entity == r'time\getTime':
-                speak(core.SystemInfo.get_time())
-            if entity == r'time\getDate':
-                speak(core.SystemInfo.get_date())
-            print(f'Text: {text} Entity: {entity}')
-            if text == 'pare':
+            evaluate(text)
+            if text == 'pare' or text == 'fechar':
                 speak('Obrigado Senhor')
                 break

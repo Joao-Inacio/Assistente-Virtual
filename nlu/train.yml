@@ -44,3 +44,11 @@ commands:
     input:  Abra youtube
     entity: open
     action: 
+  - commmand:
+    input:  Abrir bloco de notas
+    entity: open
+    action: notepads
+  - commmand:
+    input:  Abrar o bloco de notas
+    entity: open
+    action: notepads

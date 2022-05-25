@@ -9,13 +9,13 @@ from keras.utils import to_categorical
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '1'"""
 
-data = yaml.safe_load(open('nlu\\train.yml', 'r', encoding='utf-8').read())
+data = yaml.safe_load(open(r'nlu\\train.yml', 'r', encoding='utf-8').read())
 
 inputs, outputs = [], []
 
 for command in data['commands']:
     inputs.append(command['input'].lower())
-    outputs.append(r'{}\{}'.format(command['entity'], command['action']))
+    outputs.append(f"{command['entity']}|{ command['action']}")
 
 
 # Processar texto: palavras, caracteres, bytes, sub-palavras
@@ -26,7 +26,6 @@ for command in data['commands']:
 
 max_seq = max([len(bytes(x.encode('utf8'))) for x in inputs])
 
-print('Maior seq:', max_seq)
 
 # Criar dataset one-hot (número de examplos, tamanho da seq, num caracteres)
 # Criar dataset disperso (número de examplos, tamanho da seq)
@@ -76,11 +75,11 @@ model = Sequential()
 model.add(LSTM(128))
 model.add(Dense(len(output_data), activation='softmax'))
 
-model.compile(optimizer='adam', loss='categorical_crossentropy',
-              metrics=['acc']
-              )
+model.compile(
+    optimizer='adam', loss='categorical_crossentropy', metrics=['acc']
+)
 
-model.fit(input_data, output_data, epochs=32)
+model.fit(input_data, output_data, epochs=128)
 
 # Salva modelo
 model.save('model.h5')
@@ -95,8 +94,3 @@ def classify(text):
     out = model.predict(x)
     idx = out.argmax()
     print(idx2label[idx])
-
-
-while True:
-    text = input('Digite algo: ')
-    classify(text)
