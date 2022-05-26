@@ -1,5 +1,7 @@
-time|getDate
-time|getTime
-open|None
 weather|getWeather
 open|notepads
+close|None
+open|None
+time|getDate
+time|getTime
+close|notepads

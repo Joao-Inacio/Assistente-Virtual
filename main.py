@@ -12,7 +12,10 @@ with sr.Microphone() as source:
 """
 # !/usr/bin/env python3
 
+# from concurrent.futures import process
 from vosk import Model, KaldiRecognizer
+import psutil
+from threading import Thread
 import os
 import pyaudio
 import pyttsx3
@@ -31,16 +34,37 @@ def speak(text):
     engine.runAndWait()
 
 
+class open_program(Thread):
+    def __init__(self, program):
+        self.program = program
+
+        super().__init__()
+
+    def run(self):
+        os.system(self.program)
+
+
+def close_program(name):
+    for process in (process for process in psutil.process_iter() if process.name() == name):
+        process.kill()
+
+
 def evaluate(text):
     entity = classify(text)
-    if entity == 'time|getTime':
-        speak(core.SystemInfo.get_time())
-    if entity == 'time|getDate':
-        speak(core.SystemInfo.get_date())
-    # Abrir programas
-    if entity == 'open|notepads':
-        speak('Abrindo o bloco de notas')
-        os.system('Notepads.exe')
+    if text != '':
+        if entity == 'time|getTime':
+            speak(core.SystemInfo.get_time())
+        if entity == 'time|getDate':
+            speak(core.SystemInfo.get_date())
+        # Abrir programas
+        if entity == 'open|notepads':
+            speak('Abrindo o bloco de notas')
+            prog = open_program('Notepads.exe')
+            prog.start()
+        # Fechar programas
+        if entity == 'close|notepads':
+            speak('Fechando o bloco de notas')
+            close_program('Notepads.exe')
     print(f'Text: {text} Entity: {entity}')
 
 
